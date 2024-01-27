@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include <stddef.h>
+#include <libopencm3/cm3/scb.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
@@ -18,7 +21,7 @@ static uint8_t prog_pagecounter;
 static uint16_t usbFunctionRead(uint8_t* data, uint16_t len);
 static uint16_t usbFunctionWrite(uint8_t* data, uint16_t len);
 
-static int usbFunctionSetup(usbd_device *usbd_dev, struct usb_setup_data *req,
+static enum usbd_request_return_codes  usbFunctionSetup(usbd_device *usbd_dev, struct usb_setup_data *req,
 	uint8_t **buf, uint16_t *len,
 	void (**complete)(usbd_device *usbd_dev, struct usb_setup_data *req))
 {
@@ -297,13 +300,11 @@ static void config_setup(usbd_device *usbd_dev, uint16_t wValue) {
 }
 
 static void usb_setup(void) {
-	rcc_clock_setup_hsi(&rcc_hsi_8mhz[RCC_CLOCK_48MHZ]);
-	rcc_usb_prescale_1();
-	rcc_periph_clock_enable(RCC_USB);
-	rcc_periph_clock_enable(RCC_GPIOA);
+	rcc_clock_setup_pll(&rcc_hsi_configs[RCC_CLOCK_HSI_48MHZ]);
 
-	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO11 | GPIO12);
-	gpio_set_af(GPIOA, GPIO_AF14, GPIO11| GPIO12);
+	rcc_periph_clock_enable(RCC_USB);
+	rcc_periph_reset_pulse(RST_USB);
+
 }
 
 usbd_device * usbasp_init(void) {

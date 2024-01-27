@@ -12,12 +12,12 @@ static void gpio_setup(void) {
 	const uint16_t leds_pin = GPIO8 | GPIO9 | GPIO10 | GPIO11 |
 		GPIO12 | GPIO13 | GPIO14 | GPIO15;
 	rcc_periph_clock_enable(RCC_GPIOE);
-	gpio_mode_setup(GPIOE, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, leds_pin);
+	gpio_set_mode(GPIOE, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, leds_pin);
 	gpio_clear(GPIOE, leds_pin);
 }
 static void usb_reset(void) {
 	rcc_periph_clock_enable(RCC_GPIOA);
-	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO11 | GPIO12);
+	gpio_set_mode(GPIOA,GPIO_MODE_OUTPUT_50_MHZ , GPIO_CNF_OUTPUT_PUSHPULL , GPIO11 | GPIO12);
 	gpio_clear(GPIOA, GPIO11 | GPIO12);
 	gpio_set(GPIOE, GPIO9 | GPIO10);
 	dummy_delay();

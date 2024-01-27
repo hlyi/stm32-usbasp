@@ -32,8 +32,8 @@ void ispConnect() {
 
 	/* all ISP pins are inputs before */
 	/* now set output pins */
-	gpio_mode_setup(ISP_PORT, GPIO_MODE_OUTPUT,
-		GPIO_PUPD_NONE, ISP_RST | ISP_MOSI | ISP_SCK );
+	gpio_set_mode(ISP_PORT, GPIO_MODE_OUTPUT_10_MHZ,
+		GPIO_CNF_OUTPUT_PUSHPULL, ISP_RST | ISP_MOSI | ISP_SCK );
 
 	/* reset device */
 	gpio_clear(ISP_PORT, ISP_RST | ISP_SCK); /* RST, SCK low */
@@ -51,8 +51,8 @@ void ispConnect() {
 void ispDisconnect() {
 	/* set all ISP pins inputs */
 	/* switch pullups off */
-	gpio_mode_setup(ISP_PORT, GPIO_MODE_INPUT,
-		GPIO_PUPD_NONE, ISP_RST | ISP_MOSI | ISP_MISO | ISP_SCK );
+	gpio_set_mode(ISP_PORT, GPIO_MODE_INPUT,
+		GPIO_CNF_INPUT_FLOAT, ISP_RST | ISP_MOSI | ISP_MISO | ISP_SCK );
 	/* disable hardware SPI */
 	// spiHWdisable();
 }
